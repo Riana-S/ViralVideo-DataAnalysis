@@ -1,0 +1,196 @@
+---
+title: "HW21"
+author: "Riana Santos"
+date: "3/18/2021"
+output: pdf_document
+---
+## Making the Most Viewed Viral Videos in 24HRS Table
+```{r, message=FALSE, warning=FALSE}
+library(rvest)
+library(tidyverse)
+url <- "https://en.wikipedia.org/wiki/List_of_most-viewed_online_videos_in_the_first_24_hours"
+data24 <- read_html(url)
+class(data24)
+data24
+```
+
+```{r}
+tab <- data24 %>% html_nodes("table")
+tab
+```
+
+```{r}
+tab <- data24 %>% html_nodes("table") %>% .[1]
+head(tab)
+class(tab)
+tab <- tab %>% html_table(fill = TRUE) %>% .[1] 
+tab <- data.frame(matrix(unlist(tab), nrow=length(tab), byrow=TRUE))
+head(tab)
+class(tab)
+str(tab)
+names(tab)
+```
+
+```{r}
+rank <- c(parse_number(tab[[1]]), parse_number(tab[[2]]), parse_number(tab[[3]]), parse_number(tab[[4]]), parse_number(tab[[5]]), parse_number(tab[[6]]), parse_number(tab[[7]]), parse_number(tab[[8]]), parse_number(tab[[9]]), parse_number(tab[[10]]), parse_number(tab[[11]]), parse_number(tab[[12]]), parse_number(tab[[13]]), parse_number(tab[[14]]), parse_number(tab[[15]]), parse_number(tab[[16]]), parse_number(tab[[17]]), parse_number(tab[[18]]), parse_number(tab[[19]]), parse_number(tab[[20]]), parse_number(tab[[21]]))
+videoTitle <- c(tab[[23]], tab[[24]], tab[[25]], tab[[26]], tab[[27]], tab[[28]], tab[[29]], tab[[30]], tab[[31]], tab[[32]], tab[[33]], tab[[34]], tab[[35]], tab[[36]], tab[[37]], tab[[38]], tab[[39]], tab[[40]], tab[[41]], tab[[42]], tab[[43]])
+uploader <- c( tab[[45]], tab[[46]], tab[[47]], tab[[48]], tab[[49]], tab[[50]], tab[[51]], tab[[52]], tab[[53]], tab[[54]], tab[[55]], tab[[56]], tab[[57]], tab[[58]], tab[[59]], tab[[60]], tab[[61]], tab[[62]], tab[[63]], tab[[64]], tab[[65]])
+platform <- c( tab[[67]], tab[[68]], tab[[69]], tab[[70]], tab[[71]], tab[[72]], tab[[73]], tab[[74]], tab[[75]], tab[[76]], tab[[77]], tab[[78]], tab[[79]], tab[[80]], tab[[81]], tab[[82]], tab[[83]], tab[[84]], tab[[85]], tab[[86]], tab[[87]])
+milViews <- c(as.double(tab[[89]]), as.double(tab[[90]]), as.double(tab[[91]]), as.double(tab[[92]]), as.double(tab[[93]]), as.double(tab[[94]]), as.double(tab[[95]]), as.double(tab[[96]]), as.double(tab[[97]]), as.double(tab[[98]]), as.double(tab[[99]]), as.double(tab[[100]]), as.double(tab[[101]]), as.double(tab[[102]]), as.double(tab[[103]]), as.double(tab[[104]]), as.double(tab[[105]]), as.double(tab[[106]]), as.double(tab[[107]]), as.double(tab[[108]]), as.double(tab[[109]]))
+releaseDate <- c( tab[[111]], tab[[112]], tab[[113]], tab[[114]], tab[[115]], tab[[116]], tab[[117]], tab[[118]], tab[[119]], tab[[120]], tab[[121]], tab[[122]], tab[[123]], tab[[124]], tab[[125]], tab[[126]], tab[[127]], tab[[128]], tab[[129]], tab[[130]], tab[[131]])
+mvYN <- c("No", "Yes", "Yes", "Yes", "Yes", "Yes", "Yes", "Yes", "Yes", "Yes", "No", "Yes", "Yes", "Yes", "Yes", "Yes", "No", "Yes", "No", "Yes", "Yes")
+dateNum <- c("1/23/17", "8/21/20", "6/26/20", "8/28/20", "4/12/19", "11/20/20", "4/26/19", "10/2/20", "4/5/19", "11/30/18", "5/19/16", "2/21/20", "8/24/18", "2/28/20", "8/27/17", "4/22/19", "11/3/16", "3/12/21", "12/7/16", "5/8/20", "9/14/18")
+dateNumR <- as.Date(dateNum, "%m/%d/%y")
+dt <- data.frame(rank, videoTitle, uploader, platform, milViews, releaseDate, mvYN)
+dt
+```
+
+## Making the Most Viewed YouTube Videos Table
+```{r}
+uRL <- "https://en.wikipedia.org/wiki/List_of_most-viewed_YouTube_videos"
+dataMV <- read_html(uRL)
+class(dataMV)
+dataMV
+```
+
+```{r}
+table <- dataMV %>% html_nodes("table")
+table
+```
+
+```{r}
+table <- dataMV %>% html_nodes("table") %>% .[3]
+head(table)
+class(table)
+table <- table %>% html_table(fill = TRUE) %>% .[1]
+table <- data.frame(matrix(unlist(table), nrow=length(table), byrow=TRUE))
+head(table)
+class(table)
+str(table)
+names(table)
+```
+
+```{r}
+placement <- c(parse_number(table[[1]]), parse_number(table[[2]]), parse_number(table[[3]]), parse_number(table[[4]]), parse_number(table[[5]]), parse_number(table[[6]]), parse_number(table[[7]]), parse_number(table[[8]]), parse_number(table[[9]]), parse_number(table[[10]]), parse_number(table[[11]]), parse_number(table[[12]]), parse_number(table[[13]]), parse_number(table[[14]]), parse_number(table[[15]]), parse_number(table[[16]]), parse_number(table[[17]]), parse_number(table[[18]]), parse_number(table[[19]]), parse_number(table[[20]]), parse_number(table[[21]]), parse_number(table[[22]]), parse_number(table[[23]]), parse_number(table[[24]]), parse_number(table[[25]]), parse_number(table[[26]]), parse_number(table[[27]]), parse_number(table[[28]]), parse_number(table[[29]]), parse_number(table[[30]]))
+title <- c(table[[32]], table[[33]], table[[34]], table[[35]], table[[36]], table[[37]], table[[38]], table[[39]], table[[40]], table[[41]], table[[42]], table[[43]], table[[44]], table[[45]], table[[46]], table[[47]], table[[48]], table[[49]], table[[50]], table[[51]], table[[52]], table[[53]], table[[54]], table[[55]], table[[56]], table[[57]], table[[58]], table[[59]], table[[60]], table[[61]])
+channel <- c(table[[63]], table[[64]], table[[65]], table[[66]], table[[67]], table[[68]], table[[69]], table[[70]], table[[71]], table[[72]], table[[73]], table[[74]], table[[75]], table[[76]], table[[77]], table[[78]], table[[79]], table[[80]], table[[81]], table[[82]], table[[83]], table[[84]], table[[85]], table[[86]], table[[87]], table[[88]], table[[89]], table[[90]], table[[91]], table[[92]])
+bilViews <- c(as.double(table[[94]]), as.double(table[[95]]), as.double(table[[96]]), as.double(table[[97]]), as.double(table[[98]]), as.double(table[[99]]), as.double(table[[100]]), as.double(table[[101]]), as.double(table[[102]]), as.double(table[[103]]), as.double(table[[104]]), as.double(table[[105]]), as.double(table[[106]]), as.double(table[[107]]), as.double(table[[108]]), as.double(table[[109]]), as.double(table[[110]]), as.double(table[[111]]), as.double(table[[112]]), as.double(table[[113]]), as.double(table[[114]]), as.double(table[[115]]), as.double(table[[116]]), as.double(table[[117]]), as.double(table[[118]]), as.double(table[[119]]), as.double(table[[120]]), as.double(table[[121]]), as.double(table[[122]]), as.double(table[[123]]))
+date <- c(table[[125]], table[[126]], table[[127]], table[[128]], table[[129]], table[[130]], table[[131]], table[[132]], table[[133]], table[[134]], table[[135]], table[[136]], table[[137]], table[[138]], table[[139]], table[[140]], table[[141]], table[[142]], table[[143]], table[[144]], table[[145]], table[[146]], table[[147]], table[[148]], table[[149]], table[[150]], table[[151]], table[[152]], table[[153]], table[[154]])
+dates <- c("6/17/16", "1/12/17", "1/30/17", "4/6/15", "10/8/16", "1/31/12", "11/19/14", "7/15/12", "5/2/18", "2/27/18", "3/6/14", "10/22/15", "1/14/15", "9/5/13", "5/31/13", "10/7/14", "4/5/18", "8/18/14", "12/3/15", "2/20/14", "3/22/15", "4/11/14", "5/31/18", "7/25/12", "6/29/17", "10/22/15", "11/9/17", "6/4/10", "11/10/14", "6/17/09")
+datesR <- as.Date(dates, "%m/%d/%y")
+df <- data.frame(placement, title, channel, bilViews, date)
+df
+```
+
+```{r}
+dateDT <- data.frame(date = dateNumR,
+                     year = as.numeric(format(dateNumR, format = "%Y")),
+                     month = as.numeric(format(dateNumR, format = "%m")),
+                     day = as.numeric(format(dateNumR, format = "%d")))
+dateDT
+dateDF <- data.frame(date = datesR,
+                     year = as.numeric(format(datesR, format = "%Y")),
+                     month = as.numeric(format(datesR, format = "%m")),
+                     day = as.numeric(format(datesR, format = "%d")))
+dateDF
+```
+
+## Analysis Step 1
+#Questions: 
+What type of videos go viral the most? Is there a correlation between date and virality?
+
+#Hypothesis: 
+Music videos go viral the most, and there is a correlation between date and virality, with summer having the most videos going viral.
+
+# Potential issues, challenges, limitations: 
+1) There may be other platforms with videos that have more views that are unaccounted for. 
+2) Dataset assumes that the videos reached the maximum rate of viewership on the same day as release.
+3) It's unclear whether views across platforms were added to the total number of views reported in this dataset.
+4) Following 3, videos missing on the list may have more views combined across platforms.
+5) By the time I present, my data presentation PDF may be incorrect. (While working on this, my data changed because a new music video went viral.)
+
+## Analysis Step 2
+# What type of data is required?
+Data across platforms, mainly social media ones, where you can share videos with other people is required. With YouTube being one of the biggest video streaming platforms, the majority of the data is from this site. Qualitative, nominal, and quantitative data is also required.
+
+Some other data that I wish was included in this dataset would be what region each video is from, what genre is the music video, and whether the video is from the music industry or not. I had to add a column determining whether it was a music video or not.
+
+# If data needs to be collected, what are the measurments being taken (clearly define the procedures and standardization)? Are the measurements valid and reliable (is there potentially a need to add a research step here and conduct your own validity/reliability study before proceeding)?
+Data is collected on these platforms by measuring how long, when, and what accounts view the videos. The same account rewatching a video cannot add to the view count. However, there may be ways fans can bypass this by deleting the video from their watch history or other methods. YouTube has tried to limit this by sometimes deleting illegitimate views from videos, but it may not always be accurate. Similarly, just opening the video may not add to the view count because the video is closed too quickly. STATE ACTUAL PROCEDURE. At this time, this procedure is the most valid and reliable way to measure this data.
+
+# What pre-processing steps were taken?
+One major pre-processing step was separating the dataframe from a list on the website. After it was removed from the list, I had to set each value to a tibble, making it easier for me to see and plot the data. Luckily, because I had to manually make the table, I was able to easily add columns of data to the table without using mutate.
+
+# Clearly walk through the data cleaning process.
+After I finished getting the data into R as a tibble, I started making minor changes to the data. First, I tweaked the ranks to just show numbers and be converted to doubles. Next, I changed the view count to doubles. Lastly, I changed all of the dates from strings to doubles that I could use and graph with.
+
+# Is any data missing, if so how much?
+As stated in the first question, I wish that data on what region each video is from, what genre is the music video, and whether the video is from the music industry or not would be included. I think it would be interesting to study the correlation between where a video is from and how many views it gets or what genre goes viral the most.
+
+# Describe any imputation process for missing data.
+On the Wikipedia page, it specified whether a video was from the music industry or not in the video title. I had to make a separate column from that indication. I also had to make a separate data table for dates, even though it's provided in the given data table in a different format.
+
+# If any data was removed prior to analysis, explain why.
+The only column that I removed from the original dataset was the references for each video. I didn't think it was important to have it in as data, and if someone did want to see it, they could look at the Wikipedia page.
+
+## Analysis Step 3: Visualizations
+```{r}
+ggplot(data = dt, aes(x = platform, fill = mvYN)) +
+  geom_bar() +
+  ggtitle("Amount of Viral Videos per Platform")
+
+ggplot(data = dt, aes(x = platform, y = milViews, color = mvYN)) +
+  geom_point() +
+  ggtitle("Viral Viewership per Platform")
+
+ggplot(data = dt, aes(x = dateNumR, y = milViews)) +
+  geom_point() +
+  geom_smooth(method = "lm", color = "blue") +
+  ggtitle("Viral Viewership Over the Years")
+
+ggplot(data = df, aes(x = datesR, y = bilViews)) +
+  geom_point() +
+  geom_smooth(method = "lm", color = "blue") +
+  ggtitle("Viral Viewership in Youtube Over the Years")
+
+ggplot(data = dateDF, aes(x = month)) +
+  geom_bar() +
+  ggtitle("Amount of Viral Videos per Month on Youtube")
+
+ggplot(data = dateDT, aes(x = month, fill = dt$platform)) +
+  geom_bar() +
+  ggtitle("Amount of Viral Videos per Month")
+
+ggplot(data = dateDF, aes(x = month, y = df$bilViews)) +
+  geom_col() +
+  ggtitle("Amount of Views per Month of Viral YouTube Videos")
+
+ggplot(data = dateDT, aes(x = month, y = dt$milViews)) +
+  geom_col() +
+  ggtitle("Amount of Views per Month of Viral Videos")
+
+ggplot(data = dateDF, aes(x = year)) +
+  geom_bar() +
+  ggtitle("Amount of Videos per Year on YouTube")
+
+ggplot(data = dateDT, aes(x = year)) +
+  geom_bar() +
+  ggtitle("Amount of Videos per Year")
+```
+
+According to the first graph, YouTube has a significant amount of viral videos on its platform, with a majority of them being music videos. In fact, all of the most viral music videos are on YouTube.
+
+From the second graph, YouTube videos tend to cluster between 50 to 100 million views in the first 24 hours. Facebook videos, although there are not many of them, can reach up to 200 million views on the first day.
+
+In the third and fourth graphs, it seems that there is not much increase in the viewership of viral videos over the years.
+
+In the fifth graph, January, June, and October seem to be peak months of videos going viral on YouTube. In the sixth graph, April, August, and November seem to be peak months of when videos go viral on the two platforms represented in the dataset.
+
+In the seventh graph, the amount of views per month of viral videos seemed to match with the amount of viral videos. In the eighth graph, it seemed to differ, with January, April, August and November having the most viral views.
+
+In the ninth graph, there seems to be a peak in viral videos in 2014 and 2015. In the tenth graph, it appears that there's an overall increase in the amount of viral videos, with 2021 being the current year and the least.
+
+# Conclusions
+From my graphs, I can make several conclusions. 1) YouTube is the best platform for videos to go viral. 2) Music videos are the type of videos that go viral the most. 3) Viral viewership over the years doesn't fluctuate much, but it does throughout different months. 4) The amount of viral videos and time don't have a clear correlation.
+
+Going back to my hypothesis, I was partially correct. I was supported with the data that music videos are the most viral type of video, but I was refuted that summer is when videos go viral the most. In fact, the data seems to show that certain months are when the amount of viral videos peak. Also, as technology gets better and future generations become better acquainted with social media, it's easier for videos to go viral, which can explain the increase in viral videos overall.
